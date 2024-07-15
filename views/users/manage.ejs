@@ -1,0 +1,38 @@
+<% layout("/layouts/boilerplate2") -%>
+<h1>Manage your listing</h1>
+<hr>
+<% if(allListings.length<=0) { %>
+    <h3>You have no listing.</h3>
+    <p>Ready to rent your home? Create a listing in minutes.</p>
+    <a href="/listings/new"><button class=" btn btn-dark add-btn mt-3 mb-3">Create listing</button></a>
+    <hr>
+    <p>Want learn how to create listing?
+        <a href="/help">Visit the Help Centre</a>
+        </p>
+<% }else { %>
+    <div class="row offset-1">
+        <% allListings.forEach(listing => { %>
+            <div class="card col-5 ms-3 mb-3">
+                <div class="card-body">
+                    <div class="card-body p-3 mb-2 bg-body-tertiary rounded">
+                        <a href="/listings" class="listing-link">
+                            <div class="card col listing-card" >
+                              <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 10rem;">
+                              <div class="card-img-overlay"></div></div>
+                              </a>
+                    <h5 class="card-title"><%= listing.title %></h5>
+                    <p class="card-text"><%= listing.location %></p>
+                    <div class="btns mb-3">
+                        
+                        <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark  offset-3 edit-btn">Edit</a>
+                        <br>
+                        <form  method="post" action="/listings/<%= listing._id %>?_method=DELETE">
+                            <button class="btn btn-dark offset-5">Delete</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+    <%  }); %>
+    <% } %>

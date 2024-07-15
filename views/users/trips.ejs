@@ -1,0 +1,52 @@
+<% layout("/layouts/boilerplate") -%>
+<h1>Trips</h1>
+<hr>
+<% if(bookings.length<=0) { %>
+<h3>No trips booked ... yet!</h3>
+<p>Time to dust off your bags and start planning your next adventure.</p>
+<a href="/listings"><button class=" btn btn-dark add-btn mt-3 mb-3">Start searching</button></a>
+<hr>
+<p>Can’t find your reservation here?
+    <a href="/help">Visit the Help Centre</a>
+    </p>
+<% } else {%>
+        <div class="row">
+            
+            <% bookings.forEach(booking => { %>
+                <div class="card col-5 ms-3 mb-3">
+
+                    <div class="card-body">
+                        <% if(booking.status=="confirmed") {%>
+                            <p class="card-text text-success"> <i class="fa-solid fa-circle-check"></i>
+                               &nbsp; <%= booking.status %>
+
+                            </p>  
+                         <% } else { %>
+                        <p class="card-text text-danger"><i class="fa-solid fa-xmark"></i>
+                          &nbsp;  <%= booking.status %>
+                        </p>
+                        <% } %>
+                        <div class="card-body p-3 mb-2 bg-body-tertiary rounded">
+                            <a href="/listings" class="listing-link">
+                                <div class="card col listing-card" >
+                                  <img src="<%= booking.listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 10rem;">
+                                  <div class="card-img-overlay"></div></div>
+                                  </a>
+                        <h5 class="card-title"><%= booking.listing.title %></h5>
+                        <p class="card-text"><%= booking.listing.location %></p>
+                        <% if(booking.status=="confirmed") {%>
+                            <form method="post" action="listings/book/cancel/<%= booking._id %>?_method=PUT" >
+                             <button class="btn btn-outline-secondary">cancel</button>
+                            </form>
+                            <% } else { %>
+                            <form method="post" action="listings/book/delete/<%= booking._id %>?_method=DELETE" >
+                                <button class="btn btn-outline-secondary">remove</button>
+                           </form>
+                           <% } %>
+                           </div>
+                           </div>
+                           </div>
+        <%  }); %>
+        </div>
+
+     <% } %>

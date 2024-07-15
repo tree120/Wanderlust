@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/adminHomepage"><i class="fa-solid fa-house"></i></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        
+        <div class="navbar-nav ms-auto">
+         
+            <% if(!currUser) { %>
+            <a class="nav-link"  href="/signup"><b>Sign up</b></a>
+            <a class="nav-link" href="/login"><b>Log in</b></a>
+            <% } %>
+            <% if(currUser) { %>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="#">
+                      <i class="fa-solid fa-circle-user"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li>&nbsp;&nbsp;&nbsp;<i class="fa-regular fa-user"></i>&nbsp;<%= currUser.username %></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="/manage">Manage your listings</a></li>
+                      <li class="switch"><a class="dropdown-item" href="/admin">Manage reservation</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="/help">Help Center</a></li>
+                      <li><a class=" dropdown-item" href="/logout">Log out</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li class="switch"><a class="dropdown-item" href="/listings">Switch to travelling</a></li>
+                    </ul>
+                  </div>
+          
+                  <% } %>
+                  <b><a class="nav-link" href="/listings/new">Rent your home</a></b>
+                </div>
+              </div>
+            </div>
+          </nav>
+        
+        

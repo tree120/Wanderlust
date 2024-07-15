@@ -1,0 +1,64 @@
+<% layout("/layouts/boilerplate") -%>
+<style>
+    a{
+        color: black;
+        text-decoration: none;
+    }
+    .page{
+        background-color: #fcf8f8;
+    }
+</style>
+<div class="page mb-3">
+<div class="col-8 offset-3 mt-3 ">
+    <h1>
+        <a href="/listings/<%= listing._id %>" >
+            <i class="fa-solid fa-less-than"></i>
+        </a> &nbsp;&nbsp;
+        Request to book</h1>
+    <h3>Your Trip</h3>
+    <h4><%= listing.title %></h4>
+    <div class="card col-3  show-card listing-card mb-3">
+        
+        <br>
+        <img src="<%= originalImageUrl %>" alt="">
+      </div>
+      <div>
+    <form method="POST" action="/listings/book/<%= listing._id %>" novalidate class="needs-validation" enctype="application/x-www-form-urlencoded">
+    
+    <div class="mb-3">
+        <label for="start_time" class="form-lable">Check in</label>
+        <input name="booking[start_time]" type="date"
+         id="start_time"
+         class="form-control" required />
+        <div class="invalid-feedback">select the date</div>
+    </div>
+    <div class="mb-3">
+        <label for="end_time" class="form-lable">Check out</label>
+        <input name="booking[end_time]"  type="date" 
+        id="end_time"
+        class="form-control" required />
+        <div class="invalid-feedback">select the date</div>
+    </div>
+   
+    
+    <button class="btn btn-dark">Book</button>
+    
+    
+    <!-- <input type="hidden" name="amount" value="< parseInt(amount)*100 %>">
+    <input type="hidden" name="productName" value="< listing.title %>">
+	<script
+        
+		src="//checkout.stripe.com/v2/checkout.js"
+		class="stripe-button"
+		data-key=" key %>"
+		data-amount=" parseInt(amount)*100 %>"
+		data-currency="inr"
+		data-name="< listing.title %> "
+		data-description="Best place"
+		data-locale="auto" >
+		</script> -->
+        
+	</form>
+</div>
+</div>
+</div>
