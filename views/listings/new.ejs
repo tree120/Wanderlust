@@ -35,7 +35,6 @@
        
         <div class="invalid-feedback">Please choose one option</div>
       </div>
-      
       <div class="input-group mb-3">
         <select class="form-select form-control" name="listing[availability]"  required>
           <option selected>Change the status of your listing?</option>
@@ -46,6 +45,9 @@
        
         <div class="invalid-feedback">Please choose one option</div>
       </div>
+     
+    
+
     <div class="mb-3">
       <label for="image" class="form-lable">Upload Listing Image</label>
       <input name="listing[image]" 
@@ -67,7 +69,7 @@
 
     </div>
     </div>
-     <div class="mb-3" >
+     <!-- <div class="mb-3" >
       <label for="location" class="form-lable">Location</label>
       <input
       name="listing[location]"
@@ -77,7 +79,50 @@
       />
       <div class="invalid-feedback">Location should be valid</div>
 
-     </div>
+     </div> -->
+    
+
+<div class="mb-3">
+    <label for="location" class="form-label">Location</label>
+
+    <input
+        id="location"
+        name="listing[location]"
+        placeholder="Click on the map"
+        type="text"
+        class="form-control"
+        required
+    >
+
+    <div class="invalid-feedback">
+        Location should be valid
+    </div>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Choose location from map</label>
+
+    <div id="map"
+         style="height: 400px; width: 100%; border-radius: 10px;">
+    </div>
+</div>
+
+<input type="hidden"
+       name="listing[geometry][type]"
+       value="Point">
+
+<input type="hidden"
+       name="listing[geometry][coordinates][]"
+       id="longitude">
+
+<input type="hidden"
+       name="listing[geometry][coordinates][]"
+       id="latitude">
+
+
+<!-- GeoJSON -->
+
+
     
       <button class=" btn btn-dark add-btn mt-3 mb-3">Add</button>
       
@@ -85,3 +130,111 @@
     </div>
     </div>
   
+<script>
+
+    const mapToken = "<%= mapToken %>";
+
+    mapboxgl.accessToken = mapToken;
+
+    const map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v12",
+        center: [77.2090, 28.6139],
+        zoom: 11
+    });
+
+    map.addControl(new mapboxgl.NavigationControl());
+
+    let marker = null;
+
+
+    // Get address from coordinates
+    async function getAddress(lng, lat) {
+
+        try {
+
+            const url =
+                `https://api.mapbox.com/search/geocode/v6/reverse` +
+                `?longitude=${lng}` +
+                `&latitude=${lat}` +
+                `&access_token=${mapToken}`;
+
+            const response = await fetch(url);
+
+            const data = await response.json();
+
+            console.log("MAPBOX RESPONSE:", data);
+
+            if (data.features && data.features.length > 0) {
+
+                const feature = data.features[0];
+
+                const address =
+                    feature.properties.full_address ||
+                    feature.properties.name ||
+                    "Selected location";
+
+                // Put address into location input
+                document.getElementById("location").value = address;
+            }
+
+        } catch (error) {
+
+            console.log("Reverse geocoding error:", error);
+
+        }
+    }
+
+
+    // Create marker
+    function setMarker(lng, lat) {
+
+        if (marker) {
+            marker.remove();
+        }
+
+        marker = new mapboxgl.Marker({
+            draggable: true
+        })
+        .setLngLat([lng, lat])
+        .addTo(map);
+
+
+        // Save coordinates
+        document.getElementById("longitude").value = lng;
+        document.getElementById("latitude").value = lat;
+
+
+        // Get address
+        getAddress(lng, lat);
+
+
+        // When marker is dragged
+        marker.on("dragend", function () {
+
+            const position = marker.getLngLat();
+
+            const newLng = position.lng;
+            const newLat = position.lat;
+
+            document.getElementById("longitude").value = newLng;
+            document.getElementById("latitude").value = newLat;
+
+            getAddress(newLng, newLat);
+
+        });
+
+    }
+
+
+    // When user clicks map
+    map.on("click", function (e) {
+
+        const lng = e.lngLat.lng;
+        const lat = e.lngLat.lat;
+
+        setMarker(lng, lat);
+
+    });
+
+</script>
